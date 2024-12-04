@@ -73,9 +73,12 @@ const ScannerQrcode = () => {
 
   const handleScan = async (url: string) => {
     try {
-      const response = await axios.get("https://nf-api-server.vercel.app/proxy", {
-        params: { url },
-      });
+      const response = await axios.get(
+        "https://nf-api-server.vercel.app/proxy",
+        {
+          params: { url },
+        },
+      );
       console.log("Data fetched:", response.data);
       setScannedData(response.data);
       // setMessage(true);
@@ -88,6 +91,12 @@ const ScannerQrcode = () => {
     resetScannedData();
   };
 
+  const paymentMethodChecker = (paymentMethod: string) => {
+    return paymentMethod.includes("CARTÃO DE CRÉDITO")
+      ? TransactionPaymentMethod.CREDIT_CARD
+      : TransactionPaymentMethod.PIX;
+  };
+
   const handleSave = async () => {
     if (isScannedDataEmpty) return;
     // Criar verificação para se o ID(kEY DA NOTA FISCAL) já existe
@@ -97,9 +106,7 @@ const ScannerQrcode = () => {
         amount: scannedData.amount,
         type: TransactionType.EXPENSE,
         category: TransactionCategory.FOOD,
-        paymentMethod: scannedData.paymentMethod.includes("CARTÃO DE CRÉDITO")
-          ? TransactionPaymentMethod.CREDIT_CARD
-          : TransactionPaymentMethod.PIX,
+        paymentMethod: paymentMethodChecker(scannedData.paymentMethod),
         id: scannedData.key,
         date: new Date(),
       });
