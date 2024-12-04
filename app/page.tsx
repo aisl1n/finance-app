@@ -8,6 +8,12 @@ const Home = async () => {
   if (!userId) {
     redirect("/login");
   }
-  return <Navbar />;
+
+  return (
+    <div>
+      <Navbar />
+      <h1>Home</h1>
+    </div>
+  );
 };
 export default Home;
