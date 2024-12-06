@@ -22,12 +22,10 @@ const TransactionsPage = async () => {
     <>
       <Navbar />
       <div className="space-y-6 p-6">
-        {/* titulo e botao */}
         <div className="flex w-full items-center justify-between">
-          <h1 className="text-2xl font-bold">Transações</h1>
+          <h1 className="text-2xl font-bold">Gastos</h1>
           <AddTransactionButton />
         </div>
-        {/* tabela no Desktop e Card no Mobile */}
         <div className="block md:hidden">
           <DataCard data={transactions} />
         </div>
