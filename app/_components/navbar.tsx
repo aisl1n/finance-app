@@ -13,17 +13,17 @@ const Navbar = () => {
 
   return (
     <div className="flex justify-center">
-      <nav className="fixed bottom-0 z-20 mb-4 flex w-[440px] justify-around rounded-full bg-zinc-900 px-8 py-4 text-white opacity-85">
-        <NavbarLink href="/" className={`${isHome ? "text-primary" : ""}`}>
-          <HouseIcon size={32} />
-          <span className="text-sm font-bold">Home</span>
-        </NavbarLink>
+      <nav className="fixed bottom-0 z-20 mb-4 flex w-fit justify-around gap-14 rounded-full bg-zinc-900 px-10 py-4 text-white opacity-85">
         <NavbarLink
           href="/transactions"
           className={`${isTransactions ? "text-green-500" : ""}`}
         >
           <DollarSignIcon size={32} />
-          <span className="upp text-sm font-bold">Transações</span>
+          <span className="upp text-sm font-bold">Gastos</span>
+        </NavbarLink>
+        <NavbarLink href="/" className={`${isHome ? "text-primary" : ""}`}>
+          <HouseIcon size={32} />
+          <span className="text-sm font-bold">Início</span>
         </NavbarLink>
         <NavbarLink href="/scanner" className={isScanner ? "text-primary" : ""}>
           <ScanQrCodeIcon size={32} />
