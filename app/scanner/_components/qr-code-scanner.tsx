@@ -96,7 +96,7 @@ const QrCodeScanner = () => {
     return (
       <div className="flex flex-col">
         <TableResults scannedData={data} />
-        <div className="flex justify-end gap-2">
+        <div className="mb-24 flex justify-end gap-2">
           <Button onClick={handleCancel} variant="destructive">
             Cancelar
           </Button>
