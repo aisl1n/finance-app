@@ -13,9 +13,9 @@ import {
 } from "@prisma/client";
 import { upsertTransaction } from "@/app/_actions/upsert-transaction";
 import TableResults from "./table-results";
-import { Button } from "react-day-picker";
 import Navbar from "@/app/_components/navbar";
 import axios from "axios";
+import { Button } from "@/app/_components/ui/button";
 
 type ScannedDataType = {
   commerceName: string;
@@ -64,10 +64,53 @@ const QrCodeScanner = () => {
   ) => {
     detectedCodes.forEach((code) => {
       const { x, y, width, height } = code.boundingBox;
-      ctx.strokeStyle = "red";
+      ctx.strokeStyle = "green";
       ctx.lineWidth = 2;
       ctx.strokeRect(x, y, width, height);
     });
+  };
+
+  const renderScanner = () => {
+    return (
+      <div className="flex items-center justify-center">
+        <div className="mx-2 mt-16 flex rounded-md p-2 sm:h-[40rem] sm:w-[40rem] sm:flex-row">
+          <Scanner
+            constraints={{
+              facingMode: "environment",
+              deviceId: devices[3]?.deviceId,
+              frameRate: { ideal: 30, max: 60 },
+            }}
+            onScan={(result) => {
+              if (result[0]?.rawValue) {
+                handleScan(result[0].rawValue);
+              }
+            }}
+            components={{ tracker: drawFrame }}
+          />
+        </div>
+      </div>
+    );
+  };
+
+  const renderTableResults = (data: ScannedDataType) => {
+    return (
+      <div className="flex flex-col">
+        <TableResults scannedData={data} />
+        <div className="flex justify-end gap-2">
+          <Button onClick={handleCancel} variant="destructive">
+            Cancelar
+          </Button>
+          <Button onClick={handleSave}>Salvar Nota Fiscal</Button>
+        </div>
+      </div>
+    );
+  };
+
+  const renderScannerAndResults = () => {
+    if (isScannedDataEmpty) {
+      return renderScanner();
+    }
+    return renderTableResults(scannedData);
   };
 
   const handleScan = async (url: string) => {
@@ -80,20 +123,21 @@ const QrCodeScanner = () => {
       );
       console.log("Data fetched:", response.data);
       setScannedData(response.data);
+      renderTableResults(scannedData);
       // setMessage(true);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
 
-  const handleCancel = () => {
-    resetScannedData();
-  };
-
   const paymentMethodChecker = (paymentMethod: string) => {
     return paymentMethod.includes("CARTÃO DE CRÉDITO")
       ? TransactionPaymentMethod.CREDIT_CARD
       : TransactionPaymentMethod.PIX;
+  };
+
+  const handleCancel = () => {
+    resetScannedData();
   };
 
   const handleSave = async () => {
@@ -116,47 +160,8 @@ const QrCodeScanner = () => {
   };
   return (
     <>
-      {isScannedDataEmpty ? (
-        <div className="flex items-center justify-center">
-          <div className="mx-2 mt-16 flex rounded-md p-2 sm:h-[40rem] sm:w-[40rem] sm:flex-row">
-            <Scanner
-              constraints={{
-                facingMode: "environment",
-                deviceId: devices[3]?.deviceId,
-                frameRate: { ideal: 30, max: 60 },
-              }}
-              onScan={(result) => {
-                if (result[0]?.rawValue) {
-                  handleScan(result[0].rawValue);
-                }
-              }}
-              components={{ tracker: drawFrame }}
-            />
-          </div>
-        </div>
-      ) : (
-        <div>
-          {/* <RenderMessage setMessage={setMessage} message={message} /> */}
-          <div className="pb-20">
-            <TableResults scannedData={scannedData} />
-            <div className="flex flex-row justify-end gap-2 p-4">
-              <Button
-                className="bg-rose-600 font-bold text-inherit hover:bg-rose-800"
-                onClick={() => handleCancel()}
-              >
-                Cancelar
-              </Button>
-              <Button
-                className="bg-emerald-500 font-bold text-inherit hover:bg-emerald-800"
-                onClick={() => handleSave()}
-              >
-                Salvar compra
-              </Button>
-            </div>
-          </div>
-        </div>
-      )}
       <Navbar />
+      {renderScannerAndResults()}
     </>
   );
 };

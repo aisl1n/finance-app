@@ -31,12 +31,12 @@ export default function TableResults({
 }: TableResultsProps) {
   return (
     <>
-      <div className="mx-auto max-w-4xl p-2">
-        <div className="rounded-md px-2 shadow-md">
+      <div className="w-full pb-4">
+        <div className="shadow-md">
           <h1 className="flex flex-col pb-2 text-center font-black">
             Nota Fiscal
           </h1>
-          <Table>
+          <Table className="rounded border">
             <TableHeader>
               <TableRow>
                 <TableHead>Nome</TableHead>
