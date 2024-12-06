@@ -16,7 +16,7 @@ const Navbar = () => {
       <nav className="fixed bottom-0 z-20 mb-4 flex w-fit justify-around gap-14 rounded-full bg-zinc-900 px-10 py-4 text-white opacity-85">
         <NavbarLink
           href="/transactions"
-          className={`${isTransactions ? "text-green-500" : ""}`}
+          className={`${isTransactions ? "text-primary" : ""}`}
         >
           <DollarSignIcon size={32} />
           <span className="upp text-sm font-bold">Gastos</span>
