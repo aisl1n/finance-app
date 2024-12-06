@@ -127,7 +127,10 @@ const UpsertTransactionDialog = ({
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="max-h-[70vh] space-y-8 overflow-y-auto p-2"
+          >
             <FormField
               control={form.control}
               name="name"
@@ -254,15 +257,17 @@ const UpsertTransactionDialog = ({
                 </FormItem>
               )}
             />
-            <DialogFooter className="gap-4">
-              <DialogClose asChild>
-                <Button type="button" variant="outline">
-                  Cancelar
+            <DialogFooter>
+              <div className="flex justify-center gap-10">
+                <DialogClose asChild>
+                  <Button type="button" variant="outline" className="w-full">
+                    Cancelar
+                  </Button>
+                </DialogClose>
+                <Button type="submit" variant="default" className="w-full">
+                  {isUpdate ? "Atualizar" : "Adicionar"}
                 </Button>
-              </DialogClose>
-              <Button type="submit" variant="default">
-                {isUpdate ? "Atualizar" : "Adicionar"}
-              </Button>
+              </div>
             </DialogFooter>
           </form>
         </Form>
