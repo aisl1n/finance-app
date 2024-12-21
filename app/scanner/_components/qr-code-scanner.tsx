@@ -11,7 +11,7 @@ import {
   TransactionPaymentMethod,
   TransactionType,
 } from "@prisma/client";
-import { upsertTransaction } from "@/app/_actions/upsert-transaction";
+import { insertTransaction } from "@/app/_actions/upsert-transaction";
 import TableResults from "./table-results";
 import Navbar from "@/app/_components/navbar";
 import axios from "axios";
@@ -70,7 +70,7 @@ const QrCodeScanner = () => {
     });
   };
 
-  const renderScanner = () => {
+  function renderScanner() {
     return (
       <div className="flex items-center justify-center">
         <div className="mx-2 mt-16 flex rounded-md p-2 sm:h-[40rem] sm:w-[40rem] sm:flex-row">
@@ -90,9 +90,9 @@ const QrCodeScanner = () => {
         </div>
       </div>
     );
-  };
+  }
 
-  const renderTableResults = (data: ScannedDataType) => {
+  function renderTableResults(data: ScannedDataType) {
     return (
       <div className="flex flex-col">
         <TableResults scannedData={data} />
@@ -104,14 +104,14 @@ const QrCodeScanner = () => {
         </div>
       </div>
     );
-  };
+  }
 
-  const renderScannerAndResults = () => {
+  function renderScannerAndResults() {
     if (isScannedDataEmpty) {
       return renderScanner();
     }
     return renderTableResults(scannedData);
-  };
+  }
 
   const handleScan = async (url: string) => {
     try {
@@ -143,8 +143,9 @@ const QrCodeScanner = () => {
   const handleSave = async () => {
     if (isScannedDataEmpty) return;
     // Criar verificação para se o ID(kEY DA NOTA FISCAL) já existe
+    console.log(scannedData.products);
     try {
-      upsertTransaction({
+      insertTransaction({
         name: scannedData.commerceName,
         amount: scannedData.amount,
         type: TransactionType.EXPENSE,
@@ -152,6 +153,12 @@ const QrCodeScanner = () => {
         paymentMethod: paymentMethodChecker(scannedData.paymentMethod),
         id: scannedData.key,
         date: new Date(),
+        products: scannedData.products.map((product) => ({
+          id: product.id,
+          name: product.name,
+          price: product.price,
+          quantity: product.quantity,
+        })),
       });
       resetScannedData();
     } catch (error) {
