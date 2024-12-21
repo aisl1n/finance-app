@@ -17,7 +17,39 @@ const TransactionsPage = async () => {
     where: {
       userId,
     },
+    orderBy: {
+      date: "desc",
+    },
+    select: {
+      id: true,
+      name: true,
+      type: true,
+      amount: true,
+      category: true,
+      paymentMethod: true,
+      date: true,
+      createdAt: true,
+      updatedAt: true,
+      userId: true,
+      products: {
+        select: {
+          id: true,
+          name: true,
+          price: true,
+          quantity: true,
+        },
+      },
+    },
   });
+
+  const formattedTransactions = transactions.map((transaction) => ({
+    ...transaction,
+    products: transaction.products.map((product) => ({
+      ...product,
+      price: Number(product.price),
+    })),
+  }));
+
   return (
     <>
       <Navbar />
@@ -27,7 +59,7 @@ const TransactionsPage = async () => {
           <AddTransactionButton />
         </div>
         <div className="block md:hidden">
-          <DataCard data={transactions} />
+          <DataCard data={formattedTransactions} />
         </div>
         <div className="hidden md:block">
           <DataTable columns={transactionColumns} data={transactions} />
