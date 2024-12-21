@@ -17,13 +17,22 @@ model Transaction {
   id            String                   @id @default(uuid())
   name          String
   type          TransactionType
-  amount         Decimal                  @db.Decimal(10, 2)
+  amount        Decimal                  @db.Decimal(10, 2)
   category      TransactionCategory
   paymentMethod TransactionPaymentMethod
   date          DateTime
   createdAt     DateTime                 @default(now())
   updatedAt     DateTime                 @updatedAt
   userId        String
+  products      Product[]                @relation("TransactionProducts")
+}
+model Product {
+  id            String        @id @default(uuid())
+  name          String
+  price         Decimal       @db.Decimal(10, 2)
+  quantity      Int
+  transactionId String?
+  Transaction   Transaction[] @relation("TransactionProducts")
 }
 
 enum TransactionType {
