@@ -98,7 +98,7 @@ const UpsertTransactionDialog = ({
 
   const onSubmit = async (data: FormSchema) => {
     try {
-      await upsertTransaction({ ...data, id: transactionId });
+      await upsertTransaction({ ...data, id: transactionId, products: [] });
       setIsOpen(false);
       form.reset();
     } catch (error) {
